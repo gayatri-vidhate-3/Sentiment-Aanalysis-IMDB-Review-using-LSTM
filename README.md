@@ -32,23 +32,21 @@ Most tutorials stop at "here's the model, here's the accuracy." This project goe
 
 ## 🗂️ Repository Structure
 
+```
 imdb-sentiment-analysis/
 ├── notebook/
 │   └── IMDB_sentiment_Analysis_project.ipynb   # data prep, EDA, tokenizer fit, training
-│
 ├── models/
 │   ├── model.weights.h5        # trained LSTM weights
-│   ├── tokenizer.pkl           # fitted Keras Tokenizer (word → index mapping)
+│   ├── tokenizer.pkl           # fitted Keras Tokenizer (word to index mapping)
 │   ├── max_length.pkl          # padding length used during training
 │   └── english_stops.pkl       # stopword set used in preprocessing
-│
-├── loader.py           # rebuilds model architecture + loads trained weights/tokenizer
-├── preprocessing.py    # text cleaning: strip non-alphabets → remove stopwords → lowercase
-├── main.py              # FastAPI app exposing the /predict endpoint
+├── loader.py                   # rebuilds model architecture + loads trained weights/tokenizer
+├── preprocessing.py            # text cleaning: strip non-alphabets, remove stopwords, lowercase
+├── main.py                     # FastAPI app exposing the /predict endpoint
 ├── requirements.txt
 └── README.md
-
----
+```
 
 ## ⚙️ How It Works
 
@@ -63,7 +61,7 @@ imdb-sentiment-analysis/
 
 ### 1. Clone & set up environment
 ```bash
-git clone <your-repo-url>
+git clone <repo-url>
 cd imdb-sentiment-analysis
 python -m venv venv
 venv\Scripts\activate        # Windows
@@ -131,4 +129,4 @@ curl -X POST "http://127.0.0.1:8000/predict" \
 ## 👤 Author
 
 **Gayatri Vidhate**
-Machine Learning Engineer | NLP & Applied ML
+Data Scientist | NLP Engineer | ML Engineer | GenAI Engineer 
