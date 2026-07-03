@@ -31,3 +31,21 @@ Most tutorials stop at "here's the model, here's the accuracy." This project goe
 ---
 
 ## 🗂️ Repository Structure
+
+imdb-sentiment-analysis/
+├── notebook/
+│   └── IMDB_sentiment_Analysis_project.ipynb   # data prep, EDA, tokenizer fit, training
+│
+├── models/
+│   ├── model.weights.h5        # trained LSTM weights
+│   ├── tokenizer.pkl           # fitted Keras Tokenizer (word → index mapping)
+│   ├── max_length.pkl          # padding length used during training
+│   └── english_stops.pkl       # stopword set used in preprocessing
+│
+├── loader.py           # rebuilds model architecture + loads trained weights/tokenizer
+├── preprocessing.py    # text cleaning: strip non-alphabets → remove stopwords → lowercase
+├── main.py              # FastAPI app exposing the /predict endpoint
+├── requirements.txt
+└── README.md
+
+
