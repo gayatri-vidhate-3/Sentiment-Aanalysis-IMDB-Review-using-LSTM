@@ -10,7 +10,7 @@ This project covers the complete lifecycle of an NLP model — from raw text pre
 
 Most tutorials stop at "here's the model, here's the accuracy." This project goes a step further: the trained LSTM model is decoupled from its notebook environment and wrapped into a standalone, production-style inference service — the same pattern used when shipping ML models behind a real API.
 
-- **Dataset:** IMDB movie reviews (50,000 labeled reviews — positive/negative)
+- **Dataset:** IMDB movie reviews (seperate Train and Test files with labeled reviews — positive/negative)
 - **Model:** Embedding → LSTM → Dense (binary sigmoid output)
 - **Serving layer:** FastAPI, with the trained model, tokenizer, and preprocessing pipeline loaded once at startup for fast repeated inference
 - **Interface:** REST endpoint returning sentiment + confidence score for any input review
