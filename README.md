@@ -48,4 +48,87 @@ imdb-sentiment-analysis/
 ├── requirements.txt
 └── README.md
 
+---
 
+## ⚙️ How It Works
+
+1. **Training (notebook):** Reviews are cleaned, tokenized, and converted into padded integer sequences. An LSTM model learns to map these sequences to a sentiment probability.
+2. **Artifact export:** Rather than saving only the model, the fitted `Tokenizer`, `max_length`, and stopword set are also persisted — since inference requires the *exact same* word-to-index vocabulary used at training time. Skipping this is a common mistake that silently breaks predictions.
+3. **Model reconstruction:** Instead of relying on Keras's full `.keras` config-based reload (which is sensitive to Keras version drift between training and deployment environments), the architecture is rebuilt explicitly in code and only the trained **weights** are loaded. This makes deployment robust even when the serving environment's Keras version differs from the training environment's.
+4. **Serving:** FastAPI loads all artifacts once at startup (not per-request) and exposes a `/predict` endpoint that runs the same cleaning → tokenize → pad → predict pipeline used during training.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone & set up environment
+```bash
+git clone <your-repo-url>
+cd imdb-sentiment-analysis
+python -m venv venv
+venv\Scripts\activate        # Windows
+source venv/bin/activate     # macOS/Linux
+```
+
+### 2. Install dependencies
+```bash
+pip install -r requirements.txt
+```
+
+### 3. Run the API
+```bash
+uvicorn main:app
+```
+> Note: `--reload` is intentionally avoided here — TensorFlow's memory footprint combined with uvicorn's file-watcher subprocess can cause `MemoryError` on machines with limited RAM.
+
+### 4. Test it
+Open **http://127.0.0.1:8000/docs** for interactive Swagger UI, or call directly:
+
+```bash
+curl -X POST "http://127.0.0.1:8000/predict" \
+  -H "Content-Type: application/json" \
+  -d '{"review": "This movie was absolutely fantastic, I loved every minute of it!"}'
+```
+
+**Response:**
+```json
+{
+  "review": "This movie was absolutely fantastic, I loved every minute of it!",
+  "sentiment": "Positive",
+  "score": 0.9234
+}
+```
+
+---
+
+## 🛠️ Tech Stack
+
+- **Python 3.10**
+- **TensorFlow / Keras 3** — model training & inference
+- **FastAPI** — REST API layer
+- **Uvicorn** — ASGI server
+- **Pydantic** — request validation
+
+---
+
+## 💡 Key Engineering Notes
+
+- Preprocessing at inference time is **kept identical** to training-time preprocessing (same cleaning function, same stopword set, same tokenizer) — a mismatch here is one of the most common silent failure modes in deployed NLP models.
+- Model weights are loaded into a **manually rebuilt architecture** rather than via full model deserialization, avoiding brittleness from Keras config format changes across versions.
+- Artifacts (model weights, tokenizer, max_length, stopwords) are loaded **once at application startup**, not per-request, for low-latency predictions.
+
+---
+
+## 📈 Possible Extensions
+
+- Batch prediction endpoint for scoring multiple reviews in one call
+- Model versioning / A-B testing between architectures
+- Dockerizing the service for deployment
+- Swapping LSTM for a transformer-based encoder (e.g., DistilBERT) as a comparison baseline
+
+---
+
+## 👤 Author
+
+**Gayatri Vidhate**
+Machine Learning Engineer | NLP & Applied ML
